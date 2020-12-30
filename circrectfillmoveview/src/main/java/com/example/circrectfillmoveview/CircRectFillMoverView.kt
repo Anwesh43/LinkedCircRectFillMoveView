@@ -220,4 +220,13 @@ class CircRectFillMoverView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : CircRectFillMoverView {
+            val view : CircRectFillMoverView = CircRectFillMoverView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
