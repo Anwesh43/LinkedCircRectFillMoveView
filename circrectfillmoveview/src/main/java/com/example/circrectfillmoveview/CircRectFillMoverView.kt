@@ -22,7 +22,7 @@ val parts : Int = 4
 val strokeFactor : Float = 90f
 val rectWFactor : Float = 3.9f
 val rectHFactor : Float = 8.9f
-val circleFator : Float = 6.9f
+val circleFactor : Float = 6.9f
 val delay : Long = 20
 val backColor : Int = Color.parseColor("#BDBDBD")
 
@@ -31,3 +31,39 @@ fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
 fun Float.sinify() : Float = Math.sin(this * Math.PI).toFloat()
 
+fun Canvas.drawCircRectFillMover(scale : Float, w : Float, h : Float, paint : Paint) {
+    val r : Float = Math.min(w, h) / circleFactor
+    val rw : Float = Math.min(w, h) / rectWFactor
+    val rh : Float = Math.min(w, h) / rectHFactor
+    val sf : Float = scale.sinify()
+    val sf1 : Float = sf.divideScale(0, parts)
+    val sf2 : Float = sf.divideScale(1, parts)
+    val sf3 : Float = sf.divideScale(2, parts)
+    val sf4 : Float = sf.divideScale(3, parts)
+    save()
+    translate(w / 2, h / 2)
+    save()
+    translate(-w / 2 - rw * (1 - sf1), h / 4)
+    paint.style = Paint.Style.STROKE
+    drawRect(RectF(0f, 0f, rw, rh), paint)
+    paint.style = Paint.Style.FILL
+    drawRect(RectF(0f, 0f, rw * sf3, rh), paint)
+    restore()
+    save()
+    translate(w / 2 - r * sf2, h / 4)
+    paint.style = Paint.Style.STROKE
+    drawCircle(0f, 0f, r, paint)
+    paint.style = Paint.Style.FILL
+    drawArc(RectF(-r, -r, r, r), 0f, 360f * sf4, true, paint)
+    restore()
+    restore()
+}
+
+fun Canvas.drawCRFMNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    paint.color = colors[i]
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
+    drawCircRectFillMover(scale, w, h, paint)
+}
