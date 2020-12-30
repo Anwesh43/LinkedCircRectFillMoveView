@@ -51,7 +51,7 @@ fun Canvas.drawCircRectFillMover(scale : Float, w : Float, h : Float, paint : Pa
     drawRect(RectF(0f, 0f, rw * sf3, rh), paint)
     restore()
     save()
-    translate(w / 2 - r * sf2, h / 4)
+    translate(w / 2 + r - 3 * r * sf2, -h / 4)
     paint.style = Paint.Style.STROKE
     drawCircle(0f, 0f, r, paint)
     paint.style = Paint.Style.FILL
