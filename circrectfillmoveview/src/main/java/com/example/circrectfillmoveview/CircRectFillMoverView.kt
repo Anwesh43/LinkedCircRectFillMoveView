@@ -19,6 +19,7 @@ val colors : Array<Int> = arrayOf(
     Color.parseColor(it)
 }.toTypedArray()
 val parts : Int = 4
+val scGap : Float = 0.02f / parts
 val strokeFactor : Float = 90f
 val rectWFactor : Float = 3.9f
 val rectHFactor : Float = 8.9f
@@ -81,5 +82,25 @@ class CircRectFillMoverView(ctx : Context) : View(ctx) {
             }
         }
         return true
+    }
+
+    data class State(var scale : Float = 0f, var dir : Float = 0f, var prevScale : Float = 0f) {
+
+        fun update(cb : (Float) -> Unit) {
+            this.scale += scGap * dir
+            if (Math.abs(this.scale - this.prevScale) > 1) {
+                this.scale = this.prevScale + this.dir
+                this.dir = 0f
+                this.prevScale = this.scale
+                cb(this.prevScale)
+            }
+        }
+
+        fun startUpdating(cb : () -> Unit) {
+            if (dir == 0f) {
+                dir = 1f - 2 * prevScale
+                cb()
+            }
+        }
     }
 }
